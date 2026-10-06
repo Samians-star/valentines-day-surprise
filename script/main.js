@@ -66,13 +66,54 @@ document.querySelector('.yes-btn').addEventListener('click', function() {
         "<div style='margin-top: 2rem; font-size: 3rem'>💞🌟</div>";
 });
 
-document.querySelector('.no-btn').addEventListener('mouseover', function() {
+// Smooth mobile-friendly "No" button
+const noBtn = document.querySelector('.no-btn');
+
+let noButtonBusy = false;
+
+function moveNoButton() {
+    if (noButtonBusy) return;
+
+    noButtonBusy = true;
+
+    const padding = 20;
+    const buttonRect = noBtn.getBoundingClientRect();
+
+    const maxX = Math.max(
+        0,
+        window.innerWidth - buttonRect.width - padding * 2
+    );
+
+    const maxY = Math.max(
+        0,
+        window.innerHeight - buttonRect.height - padding * 2
+    );
+
+    const x = padding + Math.random() * maxX;
+    const y = padding + Math.random() * maxY;
+
     requestAnimationFrame(() => {
-        this.style.transform = 
-            `translate(${Math.random() * 200 - 100}px, 
-            ${Math.random() * 200 - 100}px)
-            rotate(${Math.random() * 360}deg)`;
-        this.style.transition = 'all 0.5s cubic-bezier(0.25, 0.1, 0.25, 1)';
+        noBtn.style.transform =
+            `translate3d(${x - buttonRect.left}px, ${y - buttonRect.top}px, 0)`;
+
+        setTimeout(() => {
+            noButtonBusy = false;
+        }, 250);
+    });
+}
+
+// Desktop
+noBtn.addEventListener('pointerenter', (event) => {
+    if (event.pointerType === 'mouse') {
+        moveNoButton();
+    }
+});
+
+// Mobile / touch
+noBtn.addEventListener('pointerdown', (event) => {
+    event.preventDefault();
+    moveNoButton();
+});
     });
 });
 
